@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: head('All Products')"></div>
+<style>
+.gst-badge {
+	font-size: 0.75em;
+}
+</style>
+</head>
+<body>
+	<div th:replace="fragments/navbar :: navbar"></div>
+
+	<div class="container-fluid mt-4 mb-3">
+		<div class="row">
+			<!-- Sidebar -->
+			<div class="col-md-3">
+				<div class="card">
+					<div class="card-header bg-primary text-white">
+						<h5 class="card-title mb-0">Admin Panel</h5>
+					</div>
+					<div class="list-group list-group-flush">
+						<a th:href="@{/admin/dashboard}"
+							class="list-group-item list-group-item-action"> <i
+							class="fas fa-tachometer-alt me-2"></i>Dashboard
+						</a> <a th:href="@{/admin/users}"
+							class="list-group-item list-group-item-action"> <i
+							class="fas fa-users me-2"></i>User Management
+						</a> <a th:href="@{/admin/invoices}"
+							class="list-group-item list-group-item-action"> <i
+							class="fas fa-file-invoice me-2"></i>All Invoices
+						</a> <a th:href="@{/admin/customers}"
+							class="list-group-item list-group-item-action"> <i
+							class="fas fa-address-book me-2"></i>All Customers
+						</a> <a th:href="@{/admin/products}"
+							class="list-group-item list-group-item-action active"> <i
+							class="fas fa-boxes me-2"></i>All Products
+						</a> <a th:href="@{/admin/statistics}"
+							class="list-group-item list-group-item-action"> <i
+							class="fas fa-chart-bar me-2"></i>System Statistics
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Main Content -->
+			<div class="col-md-9">
+				<div class="d-flex justify-content-between align-items-center mb-4">
+					<h2>All Products</h2>
+					<div class="btn-group">
+						<a th:href="@{/admin/dashboard}" class="btn btn-outline-primary">
+							<i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+						</a>
+						<button class="btn btn-outline-success" onclick="window.print()">
+							<i class="fas fa-print me-2"></i>Print
+						</button>
+					</div>
+				</div>
+
+				<!-- Statistics -->
+				<div class="row mb-4">
+					<div class="col-md-3">
+						<div class="card text-white bg-info">
+							<div class="card-body text-center">
+								<h4 th:text="${products.size()}" class="card-title">0</h4>
+								<p class="card-text mb-0">Total Products</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card text-white bg-success">
+							<div class="card-body text-center">
+								<h4
+									th:text="${#lists.size(products.?[hsnCode != null and !#strings.isEmpty(hsnCode)])}"
+									class="card-title">0</h4>
+								<p class="card-text mb-0">With HSN Code</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card text-white bg-warning">
+							<div class="card-body text-center">
+								<h4 th:text="${uniqueGstRates}" class="card-title">0</h4>
+								<p class="card-text mb-0">GST Rates</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card text-white bg-primary">
+							<div class="card-body text-center">
+								<h4 th:text="${uniqueUsers}" class="card-title">0</h4>
+								<p class="card-text mb-0">Active Users</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Products Table -->
+				<div class="card">
+					<div class="card-header">
+						<h5 class="card-title mb-0">All System Products</h5>
+					</div>
+					<div class="card-body">
+						<div th:if="${#lists.isEmpty(products)}" class="text-center py-4">
+							<h5 class="text-muted">No products found in the system</h5>
+							<p class="text-muted">Products will appear here once users
+								start adding them.</p>
+						</div>
+
+						<div th:unless="${#lists.isEmpty(products)}"
+							class="table-responsive">
+							<table class="table table-striped table-hover">
+								<thead class="table-dark">
+									<tr>
+										<th>Product Name</th>
+										<th>Description</th>
+										<th>Price (₹)</th>
+										<th>HSN Code</th>
+										<th>GST Rate</th>
+										<th>Created By</th>
+										<th>Created Date</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="product : ${products}">
+										<td><strong th:text="${product.name}"></strong></td>
+										<td><span th:if="${product.description}"
+											th:text="${#strings.abbreviate(product.description, 30)}"
+											class="text-truncate d-inline-block"
+											style="max-width: 200px;"
+											th:attr="data-bs-toggle=tooltip,data-bs-title=${product.description}">
+										</span> <span th:unless="${product.description}" class="text-muted">No
+												description</span></td>
+										<td class="text-end"
+											th:text="${#numbers.formatDecimal(product.price, 1, 2)}"></td>
+										<td><span th:if="${product.hsnCode}"
+											class="badge bg-info" th:text="${product.hsnCode}"></span> <span
+											th:unless="${product.hsnCode}" class="text-muted">Not
+												set</span></td>
+										<td><span class="badge gst-badge"
+											th:classappend="${product.gstRate > 18 ? 'bg-danger' : (product.gstRate > 12 ? 'bg-warning' : 'bg-success')}"
+											th:text="${#numbers.formatDecimal(product.gstRate, 1, 2) + '%'}">
+										</span></td>
+										<td><span th:text="${product.createdBy.username}"></span>
+											<small th:if="${product.createdBy.role.name() == 'ADMIN'}"
+											class="badge bg-danger ms-1">ADMIN</small></td>
+										<td
+											th:text="${#temporals.format(product.createdAt, 'dd/MM/yyyy')}"></td>
+										<td>
+											<div class="btn-group btn-group-sm">
+												<a th:href="@{/products/edit/{id}(id=${product.id})}"
+													class="btn btn-outline-primary" title="Edit Product"> <i
+													class="fas fa-edit"></i>
+												</a>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<!-- GST Rate Distribution -->
+				<div class="card mt-4" th:if="${not #lists.isEmpty(products)}">
+					<div class="card-header">
+						<h5 class="card-title mb-0">GST Rate Distribution</h5>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-sm">
+								<thead>
+									<tr>
+										<th>GST Rate</th>
+										<th>Product Count</th>
+										<th>Percentage</th>
+										<th>Average Price</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="gstRate : ${gstRates}">
+										<td><span class="badge"
+											th:classappend="${gstRate > 18 ? 'bg-danger' : (gstRate > 12 ? 'bg-warning' : 'bg-success')}"
+											th:text="${#numbers.formatDecimal(gstRate, 1, 2) + '%'}">
+										</span></td>
+										<td th:text="${#lists.size(products.?[gstRate == gstRate])}"></td>
+										<td><span
+											th:text="${#numbers.formatDecimal((#lists.size(products.?[gstRate == gstRate]) / #lists.size(products)) * 100, 1, 1)}"></span>%
+										</td>
+										<td>₹<span
+											th:text="${#numbers.formatDecimal(#aggregates.avg(products.?[gstRate == gstRate].![price]), 1, 2)}"></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="admin/fragments/footer :: footer"></div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<script>
+		// Initialize tooltips
+		document.addEventListener('DOMContentLoaded', function() {
+			var tooltipTriggerList = [].slice.call(document
+					.querySelectorAll('[data-bs-toggle="tooltip"]'));
+			var tooltipList = tooltipTriggerList
+					.map(function(tooltipTriggerEl) {
+						return new bootstrap.Tooltip(tooltipTriggerEl);
+					});
+		});
+	</script>
+</body>
+</html>

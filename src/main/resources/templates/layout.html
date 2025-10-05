@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - GST Billing System">GST Billing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/dashboard}">GST Billing System</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3" th:if="${#authorization.expression('isAuthenticated()')}">
+                    Welcome, <span th:text="${#authentication.name}">User</span>!
+                </span>
+                <a class="nav-link" th:href="@{/invoices/create}" th:if="${#authorization.expression('isAuthenticated()')}">Create Invoice</a>
+                <a class="nav-link" th:href="@{/invoices/list}" th:if="${#authorization.expression('isAuthenticated()')}">View Invoices</a>
+                <a class="nav-link" th:href="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}">Logout</a>
+                <a class="nav-link" th:href="@{/login}" th:unless="${#authorization.expression('isAuthenticated()')}">Login</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        
+        <div layout:fragment="content">
+            <!-- Content will be inserted here -->
+            <h1>Default Content</h1>
+            <p>If you see this, the content wasn't replaced.</p>
+        </div>
+    </div>
+    
+    <footer class="bg-light text-center py-3 mt-5">
+        <div class="container">
+            <p class="text-muted mb-0">© 2024 GST Billing System. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

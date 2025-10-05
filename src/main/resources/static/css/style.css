@@ -1,0 +1,66 @@
+/* Custom styles for GST Billing System */
+body {
+	background-color: #f8f9fa;
+}
+
+.navbar-brand {
+	font-weight: bold;
+	font-size: 1.5rem;
+}
+
+.card {
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+	background-color: #f8f9fa;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.form-control:focus, .form-select:focus {
+	border-color: #0d6efd;
+	box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+	background-color: #0d6efd;
+	border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+	background-color: #0b5ed7;
+	border-color: #0a58ca;
+}
+
+.table th {
+	background-color: #f8f9fa;
+	font-weight: 600;
+}
+
+.alert {
+	border: none;
+	border-radius: 0.5rem;
+}
+
+/* Invoice item rows */
+.item-row {
+	padding: 1rem;
+	border: 1px solid #dee2e6;
+	border-radius: 0.375rem;
+	background-color: #fff;
+}
+
+.item-row:hover {
+	background-color: #f8f9fa;
+}
+
+/* Responsive adjustments */
+@media ( max-width : 768px) {
+	.container {
+		padding: 0 15px;
+	}
+	.card-body {
+		padding: 1rem;
+	}
+}
