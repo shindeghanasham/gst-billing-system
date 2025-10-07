@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  app:
+    image: gst-billing-system:v1
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3307/gst_billing
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Pass@123
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gst_billing
+    ports:
+      - "3307:3306"  # Host port changed to 3307 to avoid conflicts
