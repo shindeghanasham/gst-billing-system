@@ -1,18 +1,64 @@
-version: "3.9"
+version: '3.8'
+
 services:
-  app:
-    image: gst-billing-system:v1
+  # ===============================
+  # MySQL Database Container
+  # ===============================
+  mysql-docker:
+    image: mysql:8.0
+    container_name: mysql-docker
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Pass@123       # Root password
+      MYSQL_DATABASE: gst_billing         # Initial database
+    ports:
+      - "3308:3306"                       # Host:Container port
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Optional SQL init
+    networks:
+      - gst_net
+
+  # ===============================
+  # PhpMyAdmin (Optional)
+  # ===============================
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql-docker
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: Pass@123
+    ports:
+      - "8081:80"
+    networks:
+      - gst_net
+
+  # ===============================
+  # Spring Boot Application
+  # ===============================
+  gst-billing-app:
+    build: .                          # Build from local Dockerfile
+    container_name: gst-billing-app
+    depends_on:
+      - mysql-docker
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3307/gst_billing
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-docker:3306/gst_billing?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Pass@123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - gst_net
 
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: gst_billing
-    ports:
-      - "3307:3306"  # Host port changed to 3307 to avoid conflicts
+# ===============================
+# Volumes & Networks
+# ===============================
+volumes:
+  db_data:
+
+networks:
+  gst_net:
