@@ -2,10 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <!-- Bootstrap CSS -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+
 <style>
 .footer {
 	background-color: #0d6efd;
@@ -33,45 +35,69 @@ footer .social-icons a {
 .footer .social-icons a:hover {
 	transform: scale(1.2);
 }
+
+.profile-img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 2px solid white;
+	margin-bottom: 10px;
+}
+
+.no-print {
+	display: none !important;
+}
 </style>
 </head>
 <body>
 	<footer th:fragment="footer" class="footer mt-auto">
 		<div class="container">
 			<div class="row text-center text-md-start">
-				<!-- Company Info -->
-				<div class="col-md-4 mb-4">
-					<h5 class="fw-bold">GST Billing System</h5>
-					<p class="small mb-1">Smart and Simple GST Invoicing Solution.</p>
-					<p class="small mb-0">Version 1.0.0</p>
+
+				<!-- Developer Info -->
+				<div class="col-md-4 mb-4 text-center">
+					<img src="/images/ghanasham.png" alt="Ghanasham Shinde"
+						class="profile-img" style="width: 80px; margin-bottom: 10px;">
+					<h5 class="fw-bold mt-2">Ghanasham Shinde</h5>
+					<p class="small mb-1">Java Full Stack Developer (Fresher)</p>
+					<p class="small mb-0">Passionate about building modern web apps
+						using Spring Boot, MySQL, and React.</p>
 				</div>
 
 				<!-- Quick Links -->
 				<div class="col-md-4 mb-4">
 					<h6 class="fw-bold">Quick Links</h6>
 					<ul class="list-unstyled small">
-						<li><a class="text-decoration-none" th:href="@{/admin/dashboard}">Home</a></li>
+						<li><a class="text-decoration-none"
+							th:unless="${#authorization.expression('isAuthenticated()')}"
+							th:href="@{/home}">Home</a></li>
+						<li><a class="text-decoration-none"
+							th:if="${#authorization.expression('isAuthenticated()')}"
+							th:href="@{admin/dashboard}">Dashboard</a></li>
 					</ul>
 				</div>
 
 				<!-- Contact / Social -->
 				<div class="col-md-4 mb-4 text-md-end text-center">
-					<h6 class="fw-bold">Connect With Us</h6>
+					<h6 class="fw-bold">Connect With Me</h6>
 					<div class="social-icons">
-						<a href="#"><i class="fab fa-facebook"></i></a> <a href="#"><i
-							class="fab fa-twitter"></i></a> <a href="#"><i
-							class="fab fa-linkedin"></i></a> <a href="#"><i
-							class="fab fa-instagram"></i></a>
+						<a href="https://facebook.com" target="_blank"><i
+							class="fab fa-facebook"></i></a> <a href="https://twitter.com"
+							target="_blank"><i class="fab fa-twitter"></i></a> <a
+							href="https://linkedin.com/in/ghanashamshinde" target="_blank"><i
+							class="fab fa-linkedin"></i></a> <a href="https://instagram.com"
+							target="_blank"><i class="fab fa-instagram"></i></a>
 					</div>
-					<p class="small mt-2 mb-0">Email: shindeghanasham0@gmail.com</p>
-					<p class="small mb-0">Phone: +91 9359759836</p>
+					<p class="small mt-2 mb-0">📧 shindeghanasham0@gmail.com</p>
+					<p class="small mb-0">📞 +91 9359759836</p>
 				</div>
 			</div>
 
 			<hr class="border-light">
 			<div class="text-center small">
 				© <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span>
-				GST Billing System. All Rights Reserved.
+				GST Billing System | Designed by <strong>Ghanasham Shinde</strong>
 			</div>
 		</div>
 	</footer>
