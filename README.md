@@ -169,7 +169,7 @@ Visit:
 
 For demo setup or project queries:
 📩 **Email:** [shindeghanasham0@gmail.com](mailto:shindeghanasham0@gmail.com)
-📞 **Phone:** +91-9359759836
+📞 **Phone:** +91-8010237047
 
 ---
 
